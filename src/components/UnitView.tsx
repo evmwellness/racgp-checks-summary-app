@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Unit } from '../types'
 import type { UnitProgress } from '../useProgress'
+import type { AnsweredQuestion } from '../quizTypes'
 import McqQuiz from './McqQuiz'
 import KfpCase from './KfpCase'
 import SpecialtyBadge from './SpecialtyBadge'
@@ -12,7 +13,7 @@ interface Props {
   unit: Unit
   progress: UnitProgress
   onUpdate: (patch: UnitProgress) => void
-  onMcq: (score: number, total: number) => void
+  onMcq: (records: AnsweredQuestion[]) => void
 }
 
 const SESSION_SECONDS = 20 * 60
@@ -42,6 +43,8 @@ export default function UnitView({ unit, progress, onUpdate, onMcq }: Props) {
     { id: 'akt', label: `AKT MCQs (${unit.mcqs.length})`, hint: '~6 min' },
     { id: 'kfp', label: 'KFP case', hint: '~5 min' },
   ]
+
+  const questions = useMemo(() => unit.mcqs.map((q) => ({ ...q, specialty: unit.specialty })), [unit])
 
   return (
     <div>
@@ -178,7 +181,7 @@ export default function UnitView({ unit, progress, onUpdate, onMcq }: Props) {
               Single best answer, AKT style. Options are shuffled each attempt.
               {progress.mcqBest !== undefined && ` Best so far: ${progress.mcqBest}/${progress.mcqTotal}.`}
             </p>
-            <McqQuiz key={unit.id} questions={unit.mcqs} onFinish={onMcq} />
+            <McqQuiz key={unit.id} questions={questions} onFinish={onMcq} />
             <div className="mt-4 text-right">
               <button onClick={() => setTab('kfp')} className="text-sm font-medium text-teal-700 hover:underline">
                 Continue to KFP case →

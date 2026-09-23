@@ -1,5 +1,7 @@
 # check Prep – 20-minute RACGP check revision
 
+Live at: https://evmwellness.github.io/racgp-checks-summary-app/
+
 A simple study app for the Australian **FRACGP AKT and KFP exams**. It covers the **last 60 RACGP _check_ units**: Unit 583 (Jun 2021) to Unit 637 (Sep 2026), plus Supplements 1, 2, 4, 5 and 6.
 
 Each unit is a 20-minute session:
@@ -13,8 +15,13 @@ Other features:
 - Topics covered and the main specialty (plus related specialties) shown for every unit
 - Search by topic, and filter or browse by specialty
 - Mixed AKT quiz (10/20/40 questions) across all units or one specialty
+- **Answer review**: every quiz ends with a full breakdown of each question — what you picked, the
+  correct answer, and the explanation — not just a score
+- **Progress page**: overall accuracy, per-specialty accuracy bars (colour-coded strength /
+  developing / needs practice), a strengths vs. areas-to-improve summary, and a history of recent
+  quiz attempts
 - Built-in 20-minute timer with suggested pacing
-- Progress (read, best AKT score, KFP done) saved in the browser
+- Progress (read, best AKT score, KFP done, full attempt history) saved in the browser
 
 ## About the content
 
@@ -33,7 +40,6 @@ Add a `Unit` object (see `src/types.ts`) to any file in `src/data/units/`, or cr
 ## Running it
 
 ```bash
-cd check-prep
 npm install
 npm run dev      # start the dev server
 npm run build    # type-check and build to dist/ (static, can be hosted anywhere)

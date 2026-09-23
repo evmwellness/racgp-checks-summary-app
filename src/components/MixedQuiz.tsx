@@ -4,10 +4,15 @@ import { UNITS, specialtyCounts, unitMatchesSpecialty } from '../data'
 import { shuffle } from '../shuffle'
 import McqQuiz from './McqQuiz'
 import { go } from '../useHashRoute'
+import type { AnsweredQuestion } from '../quizTypes'
 
 const SIZES = [10, 20, 40]
 
-export default function MixedQuiz() {
+interface Props {
+  onFinish?: (records: AnsweredQuestion[]) => void
+}
+
+export default function MixedQuiz({ onFinish }: Props) {
   const counts = useMemo(specialtyCounts, [])
   const [specialty, setSpecialty] = useState<Specialty | ''>('')
   const [size, setSize] = useState(20)
@@ -17,7 +22,7 @@ export default function MixedQuiz() {
   const pool = useMemo(
     () =>
       UNITS.filter((u) => unitMatchesSpecialty(u, specialty)).flatMap((u) =>
-        u.mcqs.map((q) => ({ ...q, source: `${u.label} · ${u.title}` })),
+        u.mcqs.map((q) => ({ ...q, source: `${u.label} · ${u.title}`, specialty: u.specialty })),
       ),
     [specialty],
   )
@@ -75,7 +80,7 @@ export default function MixedQuiz() {
         </div>
       ) : (
         <div className="mt-4">
-          <McqQuiz key={seed} questions={questions} />
+          <McqQuiz key={seed} questions={questions} onFinish={onFinish} />
           <button onClick={() => setStarted(false)} className="mt-4 text-sm font-medium text-teal-700 hover:underline">
             ← Change settings
           </button>

@@ -7,10 +7,11 @@ import Home from './components/Home'
 import UnitView from './components/UnitView'
 import Specialties from './components/Specialties'
 import MixedQuiz from './components/MixedQuiz'
+import ProgressPage from './components/ProgressPage'
 
 export default function App() {
   const route = useHashRoute()
-  const { progress, update, recordMcq, reset } = useProgress()
+  const { progress, attempts, update, recordMcq, reset } = useProgress()
   const [specialty, setSpecialty] = useState<Specialty | ''>('')
 
   let page: JSX.Element
@@ -22,13 +23,15 @@ export default function App() {
         unit={unit}
         progress={progress[unit.id] ?? {}}
         onUpdate={(p) => update(unit.id, p)}
-        onMcq={(s, t) => recordMcq(unit.id, s, t)}
+        onMcq={(records) => recordMcq(unit.id, unit.title, records)}
       />
     )
   } else if (route[0] === 'specialties') {
     page = <Specialties onPick={setSpecialty} />
   } else if (route[0] === 'quiz') {
-    page = <MixedQuiz />
+    page = <MixedQuiz onFinish={(records) => recordMcq('mixed', 'Mixed AKT quiz', records)} />
+  } else if (route[0] === 'progress') {
+    page = <ProgressPage attempts={attempts} />
   } else {
     page = <Home progress={progress} specialty={specialty} setSpecialty={setSpecialty} />
   }
@@ -51,6 +54,9 @@ export default function App() {
             </button>
             <button onClick={() => go('/quiz')} className="hover:text-teal-700">
               Quiz
+            </button>
+            <button onClick={() => go('/progress')} className="hover:text-teal-700">
+              Progress
             </button>
           </nav>
         </div>
